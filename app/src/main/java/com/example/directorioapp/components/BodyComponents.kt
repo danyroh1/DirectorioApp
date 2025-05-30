@@ -1,7 +1,5 @@
 package com.example.directorioapp.components
 
-import android.view.View
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,11 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.directorioapp.R
 import com.example.directorioapp.model.Contacto
 
 @Composable
@@ -59,8 +55,7 @@ fun MainTextField(
     )
 }
 
-// Componente específico para campos de teléfono
-@OptIn(ExperimentalMaterial3Api::class)
+/*@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PhoneTextField(
     value: String,
@@ -106,7 +101,7 @@ fun NameTextField(
         icon = Icons.Default.Person
     )
 }
-
+*/
 @Composable
 fun ContactCard(
     contacto: Contacto,
