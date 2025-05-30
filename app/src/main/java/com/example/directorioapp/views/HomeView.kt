@@ -42,12 +42,16 @@ fun HomeView(navController: NavController, contactosVM: ContactosViewModel) {
             }
         }
     ) {
-        ContentHomeView(it, contactosVM)
+        ContentHomeView(it, navController, contactosVM) // Pasamos navController aquí
     }
 }
 
 @Composable
-fun ContentHomeView(it: PaddingValues, contactosVM: ContactosViewModel) {
+fun ContentHomeView(
+    it: PaddingValues,
+    navController: NavController, // Añadimos navController como parámetro
+    contactosVM: ContactosViewModel
+) {
     Column(modifier = Modifier.padding(it)) {
         val contactosList by contactosVM.contactosList.collectAsState()
 
@@ -63,9 +67,15 @@ fun ContentHomeView(it: PaddingValues, contactosVM: ContactosViewModel) {
 
                 SwipeableActionsBox(
                     endActions = listOf(deleteAction),
-                    swipeThreshold = 150.dp // Ajusta si quieres más o menos sensibilidad
+                    swipeThreshold = 150.dp
                 ) {
-                    ContactCard(contacto = contacto)
+                    // Hacemos que la ContactCard sea clickeable
+                    ContactCard(
+                        contacto = contacto,
+                        onClick = {
+                            navController.navigate("EditView/${contacto.id}")
+                        }
+                    )
                 }
             }
         }
