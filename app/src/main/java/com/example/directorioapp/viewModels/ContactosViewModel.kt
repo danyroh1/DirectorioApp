@@ -4,12 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.directorioapp.model.Contacto
 import com.example.directorioapp.repository.ContactosRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
+@HiltViewModel
 class ContactosViewModel @Inject constructor(private val repository: ContactosRepository) : ViewModel() {
 
     private val _contactosList = MutableStateFlow<List<Contacto>>(emptyList())

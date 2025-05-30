@@ -13,6 +13,7 @@ class DirectorioViewModel:ViewModel() {
     var nombre by mutableStateOf<Job?>(null)
         private set
     var telefono by mutableStateOf<Job?>(null)
+
     fun   onValue(value: String){
         state = state.copy(
             title = value

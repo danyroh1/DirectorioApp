@@ -1,24 +1,12 @@
 package com.example.directorioapp.views
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.directorioapp.components.MainIconButton
@@ -26,12 +14,10 @@ import com.example.directorioapp.components.MainTextField
 import com.example.directorioapp.components.MainTitle
 import com.example.directorioapp.model.Contacto
 import com.example.directorioapp.viewModels.ContactosViewModel
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddView(navController: NavController) {
+fun AddView(navController: NavController, contactosVM: ContactosViewModel) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -40,23 +26,51 @@ fun AddView(navController: NavController) {
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
-                    MainIconButton(icon = Icons.Default.ArrowBack) {
+                    MainIconButton(icon = Icons.AutoMirrored.Filled.ArrowBack) {
                         navController.popBackStack()
                     }
                 }
             )
         }
     ) {
-        ContentAddContactoView(it, navController)
+        ContentAddContacto(it, navController, contactosVM)
     }
 }
 
 @Composable
-fun ContentAddContactoView(it: PaddingValues, navController: NavController) {
-    Column(
-        modifier = Modifier.padding(it)
-    )
-    {
+fun ContentAddContacto(it: PaddingValues, navController: NavController, contactosVM: ContactosViewModel) {
+    var nombre by remember { mutableStateOf("") }
+    var apellidoPaterno by remember { mutableStateOf("") }
+    var apellidoMaterno by remember { mutableStateOf("") }
+    var telefono by remember { mutableStateOf("") }
+    var correo by remember { mutableStateOf("") }
 
+    Column(
+        modifier = Modifier
+            .padding(top = 10.dp)
+            .padding(15.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        MainTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre")
+        MainTextField(value = apellidoPaterno, onValueChange = { apellidoPaterno = it }, label = "Apellido Paterno")
+        MainTextField(value = apellidoMaterno, onValueChange = { apellidoMaterno = it }, label = "Apellido Materno")
+        MainTextField(value = telefono, onValueChange = { telefono = it }, label = "Teléfono")
+        MainTextField(value = correo, onValueChange = { correo = it }, label = "Correo")
+
+        Button(onClick = {
+            val nuevo = Contacto(
+                nombre = nombre,
+                apellidoPaterno = apellidoPaterno,
+                apellidoMaterno = apellidoMaterno,
+                telefono = telefono,
+                correo = correo
+            )
+            contactosVM.addContacto(nuevo)
+            navController.popBackStack()
+        }) {
+            Text("Guardar")
+        }
     }
 }

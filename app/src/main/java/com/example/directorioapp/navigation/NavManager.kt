@@ -7,20 +7,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.directorioapp.viewModels.ContactosViewModel
+import com.example.directorioapp.viewModels.DirectorioViewModel
 import com.example.directorioapp.views.AddView
 import com.example.directorioapp.views.EditView
 import com.example.directorioapp.views.HomeView
 
 
 @Composable
-fun NavManager(){
+fun NavManager(contactosVM: ContactosViewModel ){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "Home"){
         composable("Home"){
             HomeView(navController)
         }
         composable("AddView"){
-            AddView(navController)
+            AddView(navController,contactosVM)
         }
         composable("EditView"){
             EditView(navController)
