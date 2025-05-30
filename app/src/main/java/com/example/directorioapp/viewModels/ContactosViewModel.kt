@@ -24,7 +24,8 @@ class ContactosViewModel @Inject constructor(private val repository: ContactosRe
                     _contactosList.value = emptyList()
                 }else{
                     _contactosList.value = items
-                }            }
+                }
+            }
         }
     }
 

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.directorioapp.R
+import com.example.directorioapp.model.Contacto
 
 @Composable
 fun MainTitle(title: String) {
@@ -53,7 +54,7 @@ fun MainTextField(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 30.dp)
+            .padding(horizontal = 10.dp)
             .padding(bottom = 15.dp)
     )
 }
@@ -108,26 +109,19 @@ fun NameTextField(
 
 @Composable
 fun ContactCard(
-    nombreCompleto: String,
-    telefono: String,
-    email: String,
-    onClick: () -> Unit
+    contacto: Contacto,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .clickable { onClick() }
+            .padding(horizontal = 7.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(15.dp)
-        ) {
+        Column(modifier = Modifier.padding(7.dp)) {
             Text(
-                text = nombreCompleto,
+                text = "${contacto.nombre} ${contacto.apellidoPaterno} ${contacto.apellidoMaterno}",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Phone,
@@ -135,12 +129,11 @@ fun ContactCard(
                     tint = Color.Gray
                 )
                 Text(
-                    text = telefono,
+                    text = contacto.telefono,
                     fontSize = 16.sp,
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Email,
@@ -148,12 +141,11 @@ fun ContactCard(
                     tint = Color.Gray
                 )
                 Text(
-                    text = email,
+                    text = contacto.correo.toString(),
                     fontSize = 16.sp,
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
-
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()

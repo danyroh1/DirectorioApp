@@ -47,10 +47,10 @@ fun ContentAddContacto(it: PaddingValues, navController: NavController, contacto
 
     Column(
         modifier = Modifier
-            .padding(top = 10.dp)
+            .padding(top = 70.dp)
             .padding(15.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(7.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         MainTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre")
