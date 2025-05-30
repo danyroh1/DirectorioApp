@@ -20,7 +20,7 @@ class ContactosViewModel @Inject constructor(private val repository: ContactosRe
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getAllContactos().collect { items ->
-                if(items.isNullOrEmpty()){
+                if(items.isEmpty()){
                     _contactosList.value = emptyList()
                 }else{
                     _contactosList.value = items

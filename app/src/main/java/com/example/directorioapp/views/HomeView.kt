@@ -42,12 +42,12 @@ fun HomeView(navController: NavController, contactosVM: ContactosViewModel) {
             }
         }
     ) {
-        ContentHomeView(it, navController, contactosVM)
+        ContentHomeView(it, contactosVM)
     }
 }
 
 @Composable
-fun ContentHomeView(it: PaddingValues, navController: NavController, contactosVM: ContactosViewModel) {
+fun ContentHomeView(it: PaddingValues, contactosVM: ContactosViewModel) {
     Column(modifier = Modifier.padding(it)) {
         val contactosList by contactosVM.contactosList.collectAsState()
 
