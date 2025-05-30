@@ -1,4 +1,3 @@
-// HomeView.kt
 package com.example.directorioapp.views
 
 import androidx.compose.foundation.layout.Column
