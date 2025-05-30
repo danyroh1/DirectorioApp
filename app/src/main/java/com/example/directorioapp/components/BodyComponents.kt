@@ -1,34 +1,34 @@
 package com.example.directorioapp.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.directorioapp.R
 import com.example.directorioapp.model.Contacto
 
 @Composable
 fun MainTitle(title: String) {
-    Text(text = title, color = Color.White, fontWeight = FontWeight.Bold)
+    Text(
+        text = title,
+        color = Color(0xFFFFFFFF), // Blanco
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        modifier = Modifier.padding(vertical = 12.dp)
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,25 +37,45 @@ fun MainTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    icon: ImageVector? = null
+    iconResId: Int? = null,
+    iconVector: ImageVector? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    modifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(text = label) },
         leadingIcon = {
-            if (icon != null) {
-                Icon(imageVector = icon, contentDescription = label)
+            Box(modifier = Modifier.size(24.dp)) {
+                when {
+                    iconResId != null -> Icon(
+                        painter = painterResource(id = iconResId),
+                        contentDescription = label,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    iconVector != null -> Icon(
+                        imageVector = iconVector,
+                        contentDescription = label,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
             }
         },
-        modifier = Modifier
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        shape = RoundedCornerShape(12.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+        ),
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp)
             .padding(bottom = 15.dp)
     )
 }
 
-/*@OptIn(ExperimentalMaterial3Api::class)
+// Componente específico para teléfono con tu icono personalizado
 @Composable
 fun PhoneTextField(
     value: String,
@@ -66,12 +86,12 @@ fun PhoneTextField(
         value = value,
         onValueChange = onValueChange,
         label = label,
-        icon = Icons.Default.Phone
+        iconResId = R.drawable.llamar,
+        keyboardType = KeyboardType.Phone
     )
 }
 
-// Componente específico para campos de email
-@OptIn(ExperimentalMaterial3Api::class)
+// Componente específico para email con tu icono personalizado
 @Composable
 fun EmailTextField(
     value: String,
@@ -82,12 +102,12 @@ fun EmailTextField(
         value = value,
         onValueChange = onValueChange,
         label = label,
-        icon = Icons.Default.Email
+        iconResId = R.drawable.carta,
+        keyboardType = KeyboardType.Email
     )
 }
 
-// Componente específico para campos de nombre
-@OptIn(ExperimentalMaterial3Api::class)
+// Componente específico para nombre con tu icono personalizado
 @Composable
 fun NameTextField(
     value: String,
@@ -98,57 +118,61 @@ fun NameTextField(
         value = value,
         onValueChange = onValueChange,
         label = label,
-        icon = Icons.Default.Person
+        iconResId = R.drawable.user
     )
 }
-*/
+
 @Composable
 fun ContactCard(
     contacto: Contacto,
     onClick: () -> Unit
 ) {
-    Box(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 7.dp)
-            .clickable{ onClick() }
+            .padding(8.dp)
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFBFBFBF) // Fondo tarjeta claro
+        )
     ) {
-        Column(modifier = Modifier.padding(7.dp)) {
+        Column(modifier = Modifier.padding(12.dp)) {
             Text(
                 text = "${contacto.nombre} ${contacto.apellidoPaterno} ${contacto.apellidoMaterno}",
-                fontSize = 20.sp,
+                color = Color(0xFF212121),
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.Default.Phone,
+                    painter = painterResource(id = R.drawable.llamar),
                     contentDescription = "Teléfono",
-                    tint = Color.Gray
+                    modifier = Modifier.size(24.dp), // Aumenté el tamaño para mejor visibilidad
+                    tint = Color(0xFF10403B) // Color café oscuro consistente
                 )
                 Text(
                     text = contacto.telefono,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 8.dp)
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(start = 8.dp),
+                    color = Color(0xFF212121) // Texto oscuro
                 )
             }
+            Spacer(modifier = Modifier.height(4.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.Default.Email,
+                    painter = painterResource(id = R.drawable.carta),
                     contentDescription = "Email",
-                    tint = Color.Gray
+                    modifier = Modifier.size(24.dp), // Mismo tamaño que el de teléfono
+                    tint = Color(0xFF10403B) // Mismo color que el de teléfono
                 )
                 Text(
                     text = contacto.correo.toString(),
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 8.dp)
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(start = 8.dp),
+                    color = Color(0xFF212121) // Texto oscuro
                 )
             }
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp),
-                color = MaterialTheme.colorScheme.primary
-            )
         }
     }
 }

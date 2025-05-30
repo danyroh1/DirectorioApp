@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,17 +19,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FloatButton(onClick: () -> Unit) {
+fun FloatButton(
+    buttonColor: Color = Color(0xFF8D6E63), // Café medio por defecto
+    onClick: () -> Unit
+) {
     FloatingActionButton(
         onClick = onClick,
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = Color.White,
+        containerColor = buttonColor,
+        contentColor = Color.White, // Icono blanco
         modifier = Modifier.padding(16.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Agregar contacto"
-        )
+        Icon(Icons.Default.Add, "Agregar")
     }
 }
 

@@ -32,17 +32,19 @@ fun HomeView(navController: NavController, contactosVM: ContactosViewModel) {
             CenterAlignedTopAppBar(
                 title = { MainTitle(title = "Directorio") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = Color(0xFF127369)                 // Café oscuro elegante
                 )
             )
         },
         floatingActionButton = {
-            FloatButton {
+            FloatButton(
+                buttonColor = Color(0xFF4C5958)             // Café medio
+            ) {
                 navController.navigate("AddView")
             }
         }
     ) {
-        ContentHomeView(it, navController, contactosVM) // Pasamos navController aquí
+        ContentHomeView(it, navController, contactosVM)
     }
 }
 
@@ -69,7 +71,6 @@ fun ContentHomeView(
                     endActions = listOf(deleteAction),
                     swipeThreshold = 150.dp
                 ) {
-                    // Hacemos que la ContactCard sea clickeable
                     ContactCard(
                         contacto = contacto,
                         onClick = {
