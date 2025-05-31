@@ -49,7 +49,7 @@
 
 ---
 
-## 🔧 Requisitos
+## Requisitos
 
 - Android Studio Giraffe o superior
 - Android SDK 24+
@@ -58,7 +58,7 @@
 
 ---
 
-## ▶️ Cómo ejecutar
+## Cómo ejecutar
 
 1. Clona el repositorio:
 
