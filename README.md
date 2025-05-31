@@ -47,8 +47,6 @@
 ### Eliminar Contacto
 ![Delete Contact Image](delete_contact.png)
 
-> Reemplaza las rutas por las correctas una vez que subas las imágenes al repositorio.
-
 ---
 
 ## 🔧 Requisitos
