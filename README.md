@@ -36,16 +36,16 @@
 ## Capturas de pantalla
 
 ### OnBoarding
-![OnBoarding Image](ruta/a/la/imagen/onboarding.png)
+![OnBoarding Image](onboarding.png)
 
 ### Agregar Contacto
-![Add Contact Image](ruta/a/la/imagen/add_contact.png)
+![Add Contact Image](add_contact.png)
 
 ### Editar Contacto
-![Edit Contact Image](ruta/a/la/imagen/edit_contact.png)
+![Edit Contact Image](edit_contact.png)
 
 ### Eliminar Contacto
-![Delete Contact Image](ruta/a/la/imagen/delete_contact.png)
+![Delete Contact Image](delete_contact.png)
 
 > Reemplaza las rutas por las correctas una vez que subas las imágenes al repositorio.
 
