@@ -63,6 +63,5 @@
 1. Clona el repositorio:
 
    ```bash
-   git clone https://github.com/tu_usuario/DirectorioApp.git
-
-
+   git clone https://github.com/danyroh1/DirectorioApp.git
+   
