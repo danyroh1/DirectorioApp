@@ -11,15 +11,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,87 +58,107 @@ fun MainTextField(
     onValueChange: (String) -> Unit,
     label: String,
     iconResId: Int? = null,
-    iconVector: ImageVector? = null,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    modifier: Modifier = Modifier
+    isError: Boolean = false,
+    errorMessage: String? = null,
+    modifier: Modifier = Modifier,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(text = label) },
-        leadingIcon = {
-            Box(modifier = Modifier.size(24.dp)) {
-                when {
-                    iconResId != null -> Icon(
-                        painter = painterResource(id = iconResId),
-                        contentDescription = label,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    iconVector != null -> Icon(
-                        imageVector = iconVector,
+    Column(modifier = modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(text = label) },
+            leadingIcon = {
+                iconResId?.let {
+                    Icon(
+                        painter = painterResource(id = it),
                         contentDescription = label,
                         modifier = Modifier.size(20.dp)
                     )
                 }
-            }
-        },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        shape = RoundedCornerShape(12.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .padding(bottom = 15.dp)
-    )
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            shape = RoundedCornerShape(12.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = if (isError) Color.Red else Color(0xFF127369),
+                unfocusedBorderColor = if (isError) Color.Red else Color(0xFF4C5958),
+                errorBorderColor = Color.Red
+            ),
+            isError = isError,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
+                .padding(bottom = 15.dp)
+        )
+
+        if (isError && errorMessage != null) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
+    }
 }
 
-// Componente específico para teléfono con tu icono personalizado
 @Composable
-fun PhoneTextField(
+fun NameTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String = "Teléfono"
+    label: String = "Nombre",
+    isError: Boolean = false,
+    errorMessage: String? = null
 ) {
     MainTextField(
         value = value,
         onValueChange = onValueChange,
         label = label,
-        iconResId = R.drawable.llamar,
-        keyboardType = KeyboardType.Phone
+        iconResId = R.drawable.user,
+        isError = isError,
+        errorMessage = errorMessage
     )
 }
 
-// Componente específico para email con tu icono personalizado
+@Composable
+fun PhoneTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String = "Teléfono",
+    isError: Boolean = false,
+    errorMessage: String? = null
+) {
+    MainTextField(
+        value = value,
+        onValueChange = { newValue ->
+            if (newValue.all { it.isDigit() } || newValue.isEmpty()) {
+                onValueChange(newValue)
+            }
+        },
+        label = label,
+        iconResId = R.drawable.llamar,
+        keyboardType = KeyboardType.Phone,
+        isError = isError,
+        errorMessage = errorMessage
+    )
+}
+
 @Composable
 fun EmailTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String = "Email"
+    label: String = "Correo Electrónico",
+    isError: Boolean = false,
+    errorMessage: String? = null
 ) {
     MainTextField(
         value = value,
         onValueChange = onValueChange,
         label = label,
         iconResId = R.drawable.carta,
-        keyboardType = KeyboardType.Email
-    )
-}
-
-// Componente específico para nombre con tu icono personalizado
-@Composable
-fun NameTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String = "Nombre"
-) {
-    MainTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = label,
-        iconResId = R.drawable.user
+        keyboardType = KeyboardType.Email,
+        isError = isError,
+        errorMessage = errorMessage
     )
 }
 
@@ -145,12 +173,17 @@ fun ContactCard(
             .padding(8.dp)
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFBFBFBF) // Fondo tarjeta claro
+            containerColor = Color(0xFFBFBFBF)
         )
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
+            // Manejo seguro de nombres compuestos
             Text(
-                text = "${contacto.nombre} ${contacto.apellidoPaterno} ${contacto.apellidoMaterno}",
+                text = listOfNotNull(
+                    contacto.nombre,
+                    contacto.apellidoPaterno,
+                    contacto.apellidoMaterno
+                ).joinToString(" "),
                 color = Color(0xFF212121),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
@@ -160,31 +193,54 @@ fun ContactCard(
                 Icon(
                     painter = painterResource(id = R.drawable.llamar),
                     contentDescription = "Teléfono",
-                    modifier = Modifier.size(24.dp), // Aumenté el tamaño para mejor visibilidad
-                    tint = Color(0xFF10403B) // Color café oscuro consistente
+                    modifier = Modifier.size(24.dp),
+                    tint = Color(0xFF10403B)
                 )
                 Text(
                     text = contacto.telefono,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(start = 8.dp),
-                    color = Color(0xFF212121) // Texto oscuro
+                    color = Color(0xFF212121)
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.carta),
-                    contentDescription = "Email",
-                    modifier = Modifier.size(24.dp), // Mismo tamaño que el de teléfono
-                    tint = Color(0xFF10403B) // Mismo color que el de teléfono
-                )
-                Text(
-                    text = contacto.correo.toString(),
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(start = 8.dp),
-                    color = Color(0xFF212121) // Texto oscuro
-                )
+
+            // Solo mostrar correo si no es null ni está vacío
+            contacto.correo?.takeIf { it.isNotBlank() }?.let { email ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.carta),
+                        contentDescription = "Email",
+                        modifier = Modifier.size(24.dp),
+                        tint = Color(0xFF10403B)
+                    )
+                    Text(
+                        text = email,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(start = 8.dp),
+                        color = Color(0xFF212121)
+                    )
+                }
             }
         }
     }
 }
+
+@Composable
+fun BarraBuscar(onSearch: (String) -> Unit) {
+    var query by remember { mutableStateOf("") }
+
+    OutlinedTextField(
+        value = query,
+        onValueChange = {
+            query = it
+            onSearch(it)
+        },
+        label = { Text("Buscar contactos") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    )
+}
+

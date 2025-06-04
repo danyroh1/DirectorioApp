@@ -104,11 +104,18 @@ fun ContentEditContacto(
 ) {
     val contacto = contactosVM.contactosList.collectAsState().value.find { it.id == id }
 
+    // Estados para los campos - Usamos el operador elvis (?:) para convertir null a ""
     var nombre by remember { mutableStateOf(contacto?.nombre ?: "") }
     var apellidoPaterno by remember { mutableStateOf(contacto?.apellidoPaterno ?: "") }
     var apellidoMaterno by remember { mutableStateOf(contacto?.apellidoMaterno ?: "") }
     var telefono by remember { mutableStateOf(contacto?.telefono ?: "") }
     var correo by remember { mutableStateOf(contacto?.correo ?: "") }
+
+    // Estados para errores
+    var nombreError by remember { mutableStateOf(false) }
+    var telefonoError by remember { mutableStateOf(false) }
+    var correoError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -122,8 +129,13 @@ fun ContentEditContacto(
 
         NameTextField(
             value = nombre,
-            onValueChange = { nombre = it },
-            label = "Nombre"
+            onValueChange = {
+                nombre = it
+                nombreError = false
+            },
+            label = "Nombre",
+            isError = nombreError,
+            errorMessage = if (nombreError) errorMessage else null
         )
 
         NameTextField(
@@ -140,30 +152,60 @@ fun ContentEditContacto(
 
         PhoneTextField(
             value = telefono,
-            onValueChange = { telefono = it },
-            label = "Teléfono"
+            onValueChange = {
+                telefono = it
+                telefonoError = false
+            },
+            isError = telefonoError,
+            errorMessage = if (telefonoError) errorMessage else null
         )
 
         EmailTextField(
             value = correo,
-            onValueChange = { correo = it },
-            label = "Correo Electrónico"
+            onValueChange = {
+                correo = it
+                correoError = false
+            },
+            label = "Correo Electrónico",
+            isError = correoError,
+            errorMessage = if (correoError) errorMessage else null
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = {
-                val contactoActualizado = Contacto(
-                    id = id,
-                    nombre = nombre,
-                    apellidoPaterno = apellidoPaterno,
-                    apellidoMaterno = apellidoMaterno,
-                    telefono = telefono,
-                    correo = correo
-                )
-                contactosVM.updateContacto(contactoActualizado)
-                navController.popBackStack()
+                // Validación de campos
+                when {
+                    nombre.isBlank() -> {
+                        errorMessage = "El nombre es obligatorio"
+                        nombreError = true
+                    }
+                    telefono.isBlank() -> {
+                        errorMessage = "El teléfono es obligatorio"
+                        telefonoError = true
+                    }
+                    !telefono.matches(Regex("^[0-9]{10}\$")) -> {
+                        errorMessage = "El teléfono debe tener 10 dígitos"
+                        telefonoError = true
+                    }
+                    correo.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> {
+                        errorMessage = "Ingrese un correo electrónico válido"
+                        correoError = true
+                    }
+                    else -> {
+                        val contactoActualizado = Contacto(
+                            id = id,
+                            nombre = nombre.trim(),
+                            apellidoPaterno = apellidoPaterno.trim().takeIf { it.isNotBlank() },
+                            apellidoMaterno = apellidoMaterno.trim().takeIf { it.isNotBlank() },
+                            telefono = telefono.trim(),
+                            correo = correo.trim().takeIf { it.isNotBlank() }
+                        )
+                        contactosVM.updateContacto(contactoActualizado)
+                        navController.popBackStack()
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,7 +1,9 @@
 package com.example.directorioapp.onBoardViews
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,7 +33,10 @@ fun OnBoardingPager(
     navController: NavController,
     store: StoreBoarding
 ){
-    Box(modifier=Modifier){
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)){
         Column(horizontalAlignment = Alignment.CenterHorizontally){
             HorizontalPager(state=pagerState){
                 //Se Agregan los 3 elementos, imagen, titulo y descripcion

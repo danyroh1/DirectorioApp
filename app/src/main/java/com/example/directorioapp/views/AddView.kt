@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -99,6 +100,40 @@ fun ContentAddView(
     var telefono by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
 
+    // Estados para manejar errores
+    var nombreError by remember { mutableStateOf(false) }
+    var telefonoError by remember { mutableStateOf(false) }
+    var correoError by remember { mutableStateOf(false) }
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    // Función de validación
+    fun validateFields(): Boolean {
+        return when {
+            nombre.isBlank() -> {
+                errorMessage = "El nombre es obligatorio"
+                nombreError = true
+                false
+            }
+            telefono.isBlank() -> {
+                errorMessage = "El teléfono es obligatorio"
+                telefonoError = true
+                false
+            }
+            !telefono.matches(Regex("^[0-9]{10}\$")) -> {
+                errorMessage = "El teléfono debe tener 10 dígitos"
+                telefonoError = true
+                false
+            }
+            correo.isNotBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> {
+                errorMessage = "Ingrese un correo electrónico válido"
+                correoError = true
+                false
+            }
+            else -> true
+        }
+    }
+
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -111,47 +146,65 @@ fun ContentAddView(
 
         NameTextField(
             value = nombre,
-            onValueChange = { nombre = it },
-            label = "Nombre"
+            onValueChange = {
+                nombre = it
+                nombreError = false
+            },
+            label = "Nombre",
+            isError = nombreError
         )
 
         NameTextField(
             value = apellidoPaterno,
             onValueChange = { apellidoPaterno = it },
-            label = "Apellido Paterno"
+            label = "Apellido Paterno",
+            isError = nombreError
         )
 
         NameTextField(
             value = apellidoMaterno,
             onValueChange = { apellidoMaterno = it },
-            label = "Apellido Materno"
+            label = "Apellido Materno",
+            isError = nombreError
         )
 
         PhoneTextField(
             value = telefono,
-            onValueChange = { telefono = it },
-            label = "Teléfono"
+            onValueChange = {
+                telefono = it
+                telefonoError = false
+            },
+            label = "Teléfono",
+            isError = telefonoError
         )
 
         EmailTextField(
             value = correo,
-            onValueChange = { correo = it },
-            label = "Correo Electrónico"
+            onValueChange = {
+                correo = it
+                correoError = false
+            },
+            label = "Correo Electrónico",
+            isError = correoError
         )
 
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
             onClick = {
-                val nuevoContacto = Contacto(
-                    nombre = nombre,
-                    apellidoPaterno = apellidoPaterno,
-                    apellidoMaterno = apellidoMaterno,
-                    telefono = telefono,
-                    correo = correo
-                )
-                contactosVM.addContacto(nuevoContacto)
-                navController.popBackStack()
+                if (validateFields()) {
+                    val nuevoContacto = Contacto(
+                        nombre = nombre.trim(),
+                        apellidoPaterno = apellidoPaterno.trim().takeIf { it.isNotBlank() },
+                        apellidoMaterno = apellidoMaterno.trim().takeIf { it.isNotBlank() },
+                        telefono = telefono.trim(),
+                        correo = correo.trim().takeIf { it.isNotBlank() }
+                    )
+                    contactosVM.addContacto(nuevoContacto)
+                    navController.popBackStack()
+                } else {
+                    showErrorDialog = true
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -169,5 +222,22 @@ fun ContentAddView(
                 fontWeight = FontWeight.Medium
             )
         }
+    }
+
+    // Diálogo de error
+    if (showErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showErrorDialog = false },
+            title = { Text("Error en los datos") },
+            text = { Text(errorMessage) },
+            confirmButton = {
+                Button(
+                    onClick = { showErrorDialog = false },
+                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
+                ) {
+                    Text("Entendido")
+                }
+            }
+        )
     }
 }

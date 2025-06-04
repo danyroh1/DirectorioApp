@@ -10,11 +10,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.directorioapp.dataStore.StoreBoarding
 import com.example.directorioapp.onBoardViews.MainOnBoarding
+import com.example.directorioapp.onBoardViews.SplashScreen
 import com.example.directorioapp.viewModels.ContactosViewModel
 import com.example.directorioapp.views.AddView
 import com.example.directorioapp.views.EditView
 import com.example.directorioapp.views.HomeView
-import com.example.directorioapp.views.SplashScreen
 
 @Composable
 fun NavManager(contactosVM: ContactosViewModel) {

@@ -23,4 +23,5 @@ data class Contacto(
 
     @ColumnInfo(name = "correo")
     val correo: String? = null // Opcional
+
 )
