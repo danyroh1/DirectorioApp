@@ -35,7 +35,17 @@
 
 ## Capturas de pantalla
 
+### OnBoarding
+![OnBoarding Image](onboarding.png)
 
+### Agregar Contacto
+![Add Contact Image](add_contact.png)
+
+### Editar Contacto
+![Edit Contact Image](edit_contact.png)
+
+### Eliminar Contacto
+![Delete Contact Image](delete_contact.png)
 
 ---
 
